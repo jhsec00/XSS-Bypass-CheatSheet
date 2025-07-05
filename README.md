@@ -33,8 +33,9 @@ XSS는 공격자가 웹 페이지에 악성 스크립트를 삽입하여 사용�
 
 ### 1. 태그 분할 및 중첩 우회 (Broken/Nested Tag Bypass)
 
-필터가 단순히 script 문자열이 삭제되는 경우, scscriptript 또는 scrscriptipt 등의 형태로 필터를 우회할 수 있습니다.
-💡 예시
+필터가 단순히 script 문자열이 삭제되는 경우, scscriptript 또는 scrscriptipt 등의 형태로 필터를 우회할 수 있습니다.  
+
+### 💡 예시
 ```
 <scscriptript></scriscriptpt>
 ```
@@ -43,8 +44,9 @@ XSS는 공격자가 웹 페이지에 악성 스크립트를 삽입하여 사용�
 
 ### 2. hidden 필드 내 태그 탈출이 불가능한 경우(Hidden Input Field Payload)
 \<input type="hidden"\> 등의 폼 필드 내 속성에서 이벤트 핸들러를 통한 실행을 유도하는 방식입니다.
-2024년 7월에 등장한 새로운 우회 기법으로, oncontentvisibilityautostatechange 이벤트를 이용해 사용자 인터랙션 없이 XSS를 트리거할 수 있습니다. 이 기법은 Chrome Canary 및 최신 버전의 Chrome에서 작동하며, 기존 XSS 필터링을 우회하는 데 활용될 수 있습니다.
-💡 예시
+2024년 7월에 등장한 새로운 우회 기법으로, oncontentvisibilityautostatechange 이벤트를 이용해 사용자 인터랙션 없이 XSS를 트리거할 수 있습니다. 이 기법은 Chrome Canary 및 최신 버전의 Chrome에서 작동하며, 기존 XSS 필터링을 우회하는 데 활용될 수 있습니다.  
+
+### 💡 예시
 ```
 <input type="hidden" oncontentvisibilityautostatechange="alert(/TEST/)" style="content-visibility:auto">
 ```
@@ -54,7 +56,7 @@ XSS는 공격자가 웹 페이지에 악성 스크립트를 삽입하여 사용�
 ### 3. 유니코드 인코딩 우회 (함수 호출 필터 우회)
 웹 방화벽(WAF)이나 필터링 로직이 alert(), confirm() 등의 특정 함수 호출 문자열만 필터링할 경우, 유니코드 이스케이프를 사용하여 탐지를 우회할 수 있습니다. 이벤트 핸들러 자체는 허용되지만 내부 함수 호출만 제한하는 상황에서 효과적입니다.
 
-💡 예시
+### 💡 예시
 ```
 <img src=x onerror="\u0061lert(1)">
 <img src=x onerror="\u0063onfirm(1)">
@@ -68,7 +70,7 @@ XSS는 공격자가 웹 페이지에 악성 스크립트를 삽입하여 사용�
 일부 필터는 document.cookie라는 문자열을 정적으로 탐지하여 차단합니다.
 이럴 경우, 속성 접근을 문자열 인덱싱 방식으로 우회할 수 있습니다.
 
-💡 예시
+### 💡 예시
 ```
 <script>alert(document['cookie'])</script>
 <script>alert(document['c'+'ookie'])</script>
@@ -148,4 +150,4 @@ window.location : 전역 객체 접근으로 우회 가능
   var payload = "aaa<script>alert(1)</script>aaa";
 </script>
 ```
-💡 위 방식은 서버 측에서 "..aaa<script>alert(1)</script>aaa.." 문자열에 사용자 입력을 넣는 경우에만 작동하며, 필터링이 허술할 때 위험합니다.
+위 방식은 서버 측에서 "..aaa<script>alert(1)</script>aaa.." 문자열에 사용자 입력을 넣는 경우에만 작동하며, 필터링이 허술할 때 위험합니다.
